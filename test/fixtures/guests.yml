@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+example:
+  email: wayne_woodbridge@bnb.com
+  first_name: Wayne
+  last_name: Woodbridge
+  phone_list: |-
+    639123456789
+    639123456789
