@@ -118,3 +118,8 @@ __Payload 2__
 - use the app's base url by making api requests in:
   - GET `/reservations/:id.json`
   - POST `/reservations.json`
+
+## License
+
+This app was developed by Emmanuel Natividad.
+Copyright © 2021, Emmanuel Natividad
