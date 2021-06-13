@@ -12,7 +12,7 @@ module Reservations
       reservation = nil
       errors = []
 
-      parsed_params = parse_payload1_format_params
+      parsed_params = parse_params
       guest_params = parsed_params[:guest]
       reservation_params = parsed_params[:reservation]
 
@@ -45,6 +45,14 @@ module Reservations
 
     private
 
+    def parse_params
+      if @params.include?(:reservation)
+        parse_payload2_format_params
+      else
+        parse_payload1_format_params
+      end
+    end
+
     def parse_payload1_format_params
       guest = @params[:guest]
       guest = {
@@ -69,6 +77,38 @@ module Reservations
         payout_price: BigDecimal(@params[:payout_price]),
         security_price: BigDecimal(@params[:security_price]),
         total_price: BigDecimal(@params[:total_price]),
+      }
+
+      { guest: guest, reservation: reservation }
+    end
+
+    def parse_payload2_format_params
+      reservation_params = @params[:reservation]
+
+      guest = {
+        id: reservation_params[:guest_id],
+        email: reservation_params[:guest_email],
+        first_name: reservation_params[:guest_first_name],
+        last_name: reservation_params[:guest_last_name],
+        phone_list: reservation_params[:guest_phone_numbers].join("\n"),
+      }
+
+      guest_details_params = reservation_params[:guest_details]
+      reservation = {
+        guest_id: guest[:id],
+        start_date: Date.parse(reservation_params[:start_date]),
+        end_date: Date.parse(reservation_params[:end_date]),
+        nights: reservation_params[:nights],
+        guests: reservation_params[:number_of_guests],
+        adults: guest_details_params[:number_of_adults],
+        children: guest_details_params[:number_of_children],
+        infants: guest_details_params[:number_of_infants],
+        localized_description: guest_details_params[:localized_description],
+        status: reservation_params[:status_type],
+        currency: reservation_params[:host_currency],
+        payout_price: BigDecimal(reservation_params[:expected_payout_amount]),
+        security_price: BigDecimal(reservation_params[:listing_security_price_accurate]),
+        total_price: BigDecimal(reservation_params[:total_paid_amount_accurate]),
       }
 
       { guest: guest, reservation: reservation }
